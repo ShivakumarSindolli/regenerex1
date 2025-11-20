@@ -1,0 +1,151 @@
+You are an expert full-stack engineer and AI systems architect.
+Build a complete production-ready MERN stack project called “RegeneraX — The Intelligence of Living Cities.”
+
+The system must behave like a living digital twin of a city: understand energy, water, materials, climate conditions; run lightweight simulations; and generate regenerative architectural design proposals using pretrained AI models or LLM APIs.
+
+📌 TECHNOLOGY REQUIREMENTS
+
+MongoDB with GeoJSON + geospatial indexes
+
+Express.js + Node.js backend
+
+React (Vite) frontend
+
+Tailwind CSS + shadcn UI
+
+react-leaflet for maps
+
+Turf.js for spatial calculations
+
+Any LLM API (OpenAI/HF) for assistant + proposals
+
+Time-series forecasting (simple exponential smoothing function)
+
+📌 DELIVERABLES (GENERATE THE FULL CODE)
+
+Your output must include:
+
+Complete folder structure for MERN
+
+Backend code with:
+
+/api/upload → upload GeoJSON/CSV and store in MongoDB
+
+/api/cities/:id/layers → return building/landuse GeoJSON
+
+/api/simulate → compute energy/water/material flows
+
+/api/propose → generate regenerative design proposals
+
+/api/chat → LLM-powered city intelligence assistant
+
+/api/auth with JWT login/signup
+
+Database models:
+
+City, Layer, Sensor, Simulation, Proposal, User
+
+Use GeoJSON fields + geospatial index
+
+Simulation engine (simple version):
+
+area × usageIntensity × climateFactor = demand
+
+run for each building polygon
+
+return energy + water + stress metrics
+
+Proposal generator:
+For each building produce:
+
+Green Roof (expected energy reduction %)
+
+Rainwater Harvesting (water savings %)
+
+Passive Cooling Facade (temperature drop estimate)
+
+Include deterministic numeric calculations
+
+Produce an SVG/HTML mockup preview
+
+Conversational AI assistant:
+
+System prompt: “You are RegeneraX, the city’s regenerative intelligence.”
+
+LLM must NOT invent numbers — use backend metrics provided
+
+Frontend with:
+
+Map page (react-leaflet)
+
+Dashboard page with charts
+
+Chat/Assistant UI
+
+Data upload UI
+
+Feature sidebar with “Simulate” + “Generate Proposal” buttons
+
+Docker Compose for backend + MongoDB
+
+README with:
+
+install steps
+
+run commands
+
+architecture overview
+
+📌 FUNCTIONALITY (WHAT THE APP MUST DO)
+
+Load a city map with buildings from GeoJSON
+
+Click a building → show properties
+
+Run simulation → return numeric metrics
+
+Generate regenerative proposals → return interventions + ROI estimate
+
+Chat with AI → ask questions about city stress, flows, design decisions
+
+Upload new city layers or sensor data
+
+View analytics dashboard
+
+📌 SAMPLE INPUT DATA TO USE
+
+Sample city: Bengaluru
+
+Include sample building footprints GeoJSON
+
+Include sample sensor CSV (energy, water readings)
+
+📌 DEVELOPMENT APPROACH
+
+Produce:
+
+complete code for backend (Express)
+
+complete code for frontend (React Vite)
+
+geoJSON examples
+
+UI components in shadcn
+
+Tailwind styling
+
+simulation logic
+
+proposal engine
+
+AI chat wrapper
+
+📌 IMPORTANT RULES
+
+LLM should NEVER make up numbers — backend returns all numeric metrics
+
+Code must be runnable directly after npm install and docker compose up
+
+Keep everything minimal, clean, functional, and hackathon-ready
+
+Now generate the entire project codebase exactly according to this specification.
