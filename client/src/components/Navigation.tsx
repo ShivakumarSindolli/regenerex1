@@ -23,19 +23,21 @@ export default function Navigation() {
             <Link href="/" data-testid="link-nav-home">
               <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Home</span>
             </Link>
-            <Link href="/features" data-testid="link-nav-features">
-              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Features</span>
+            <Link href="/map" data-testid="link-nav-map">
+              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Map</span>
             </Link>
-            <Link href="/technology" data-testid="link-nav-technology">
-              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Technology</span>
+            <Link href="/dashboard" data-testid="link-nav-dashboard">
+              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Dashboard</span>
             </Link>
-            <Link href="/about" data-testid="link-nav-about">
-              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">About</span>
+            <Link href="/upload" data-testid="link-nav-upload">
+              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Upload</span>
             </Link>
           </div>
 
           <div className="hidden md:block">
-            <Button data-testid="button-get-started">Get Started</Button>
+            <Link href="/map">
+              <Button data-testid="button-get-started">Launch App</Button>
+            </Link>
           </div>
 
           <button
@@ -54,16 +56,18 @@ export default function Navigation() {
             <Link href="/" data-testid="link-mobile-home">
               <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Home</div>
             </Link>
-            <Link href="/features" data-testid="link-mobile-features">
-              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Features</div>
+            <Link href="/map" data-testid="link-mobile-map">
+              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Map</div>
             </Link>
-            <Link href="/technology" data-testid="link-mobile-technology">
-              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Technology</div>
+            <Link href="/dashboard" data-testid="link-mobile-dashboard">
+              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Dashboard</div>
             </Link>
-            <Link href="/about" data-testid="link-mobile-about">
-              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">About</div>
+            <Link href="/upload" data-testid="link-mobile-upload">
+              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Upload</div>
             </Link>
-            <Button className="w-full" data-testid="button-mobile-get-started">Get Started</Button>
+            <Link href="/map">
+              <Button className="w-full" data-testid="button-mobile-get-started">Launch App</Button>
+            </Link>
           </div>
         </div>
       )}
