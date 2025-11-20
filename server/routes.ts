@@ -5,10 +5,16 @@ import { runSimulation, forecastTimeSeries } from "./simulationEngine";
 import { generateProposal } from "./proposalGenerator";
 import { citySchema, layerSchema, sensorReadingSchema } from "@shared/schema";
 import OpenAI from "openai";
+import { getDb } from "./mongo";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+let openai: any = null;
+if (OPENAI_API_KEY) {
+  openai = new OpenAI({ apiKey: OPENAI_API_KEY });
+} else {
+  // don't throw during import; log a helpful message and handle at request time
+  console.warn("OPENAI_API_KEY not set — /api/chat will return 503 until configured.");
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/cities", async (req, res) => {
@@ -158,6 +164,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Persist the selected city (for dashboard) when Mongo is configured
+  app.post("/api/select-city", async (req, res) => {
+    try {
+      const { cityId } = req.body;
+      if (!cityId) return res.status(400).json({ error: "cityId required" });
+      if (process.env.MONGODB_URI) {
+        const db = await getDb();
+        await db.collection('selectedCity').updateOne({ key: 'current' }, { $set: { cityId, timestamp: new Date() } }, { upsert: true });
+      }
+      res.json({ ok: true });
+    } catch (error) {
+      console.error("select-city error:", error);
+      res.status(500).json({ error: "Failed to select city" });
+    }
+  });
+
+  app.get("/api/selected-city", async (_req, res) => {
+    try {
+      if (process.env.MONGODB_URI) {
+        const db = await getDb();
+        const doc = await db.collection('selectedCity').findOne({ key: 'current' });
+        return res.json(doc?.cityId ? { cityId: doc.cityId } : null);
+      }
+      return res.json(null);
+    } catch (error) {
+      console.error("selected-city error:", error);
+      res.status(500).json({ error: "Failed to get selected city" });
+    }
+  });
+
   app.get("/api/cities/:id/proposals", async (req, res) => {
     try {
       const proposals = await storage.getProposals(req.params.id);
@@ -192,6 +228,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/chat", async (req, res) => {
     try {
+      if (!openai) {
+        return res.status(503).json({ error: "OpenAI API key not configured. Set OPENAI_API_KEY to enable chat." });
+      }
       const { message, cityId, contextMetrics } = req.body;
       if (!message) {
         return res.status(400).json({ error: "Message required" });

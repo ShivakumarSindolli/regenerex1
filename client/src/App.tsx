@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import MapPage from "@/pages/map";
 import DashboardWithNav from "@/pages/dashboard-nav";
 import UploadWithNav from "@/pages/upload-nav";
+import FeaturePage from "@/pages/feature";
 import ChatAssistant from "@/components/ChatAssistant";
 import NotFound from "@/pages/not-found";
 
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/map" component={MapPage} />
       <Route path="/dashboard" component={DashboardWithNav} />
+      <Route path="/feature" component={FeaturePage} />
       <Route path="/upload" component={UploadWithNav} />
       <Route component={NotFound} />
     </Switch>

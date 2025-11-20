@@ -23,22 +23,15 @@ export default function Navigation() {
             <Link href="/" data-testid="link-nav-home">
               <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Home</span>
             </Link>
-            <Link href="/map" data-testid="link-nav-map">
-              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Map</span>
-            </Link>
-            <Link href="/dashboard" data-testid="link-nav-dashboard">
-              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Dashboard</span>
+            <Link href="/feature" data-testid="link-nav-feature">
+              <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Feature</span>
             </Link>
             <Link href="/upload" data-testid="link-nav-upload">
               <span className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Upload</span>
             </Link>
           </div>
 
-          <div className="hidden md:block">
-            <Link href="/map">
-              <Button data-testid="button-get-started">Launch App</Button>
-            </Link>
-          </div>
+          {/* Launch button removed per request */}
 
           <button
             className="md:hidden"
@@ -56,18 +49,13 @@ export default function Navigation() {
             <Link href="/" data-testid="link-mobile-home">
               <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Home</div>
             </Link>
-            <Link href="/map" data-testid="link-mobile-map">
-              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Map</div>
-            </Link>
-            <Link href="/dashboard" data-testid="link-mobile-dashboard">
-              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Dashboard</div>
+            <Link href="/feature" data-testid="link-mobile-feature">
+              <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Feature</div>
             </Link>
             <Link href="/upload" data-testid="link-mobile-upload">
               <div className="text-sm font-medium hover-elevate px-3 py-2 rounded-md">Upload</div>
             </Link>
-            <Link href="/map">
-              <Button className="w-full" data-testid="button-mobile-get-started">Launch App</Button>
-            </Link>
+            {/* mobile Launch button removed */}
           </div>
         </div>
       )}

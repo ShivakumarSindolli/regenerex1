@@ -7,6 +7,7 @@ import {
   bengaluruCity, bengaluruBuildings, bengaluruBuildingsLayer, 
   bengaluruSensors, bengaluruSensorsLayer 
 } from "./sampleData";
+import { connectMongo, getDb } from "./mongo";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -188,4 +189,62 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class MongoStorage implements IStorage {
+  private dbPromise: Promise<import('mongodb').Db>;
+
+  constructor(uri?: string) {
+    if (!uri) throw new Error('MONGODB_URI required for MongoStorage');
+    this.dbPromise = connectMongo(uri);
+  }
+
+  private async collection<T>(name: string) {
+    const db = await this.dbPromise;
+    return db.collection<T>(name);
+  }
+
+  async getUser(id: string) { const c = await this.collection<any>('users'); return c.findOne({ id }); }
+  async getUserByUsername(username: string) { const c = await this.collection<any>('users'); return c.findOne({ username }); }
+  async createUser(u: InsertUser) { const c = await this.collection<any>('users'); const id = randomUUID(); const user = { ...u, id }; await c.insertOne(user); return user; }
+
+  async getCities() { const c = await this.collection<City>('cities'); return c.find().toArray(); }
+  async getCity(id: string) { const c = await this.collection<City>('cities'); return c.findOne({ id }); }
+  async createCity(insertCity: InsertCity) { const c = await this.collection<City>('cities'); const id = randomUUID(); const city = { ...insertCity, id }; await c.insertOne(city); return city as City; }
+
+  async getLayers(cityId: string) { const c = await this.collection<Layer>('layers'); return c.find({ cityId }).toArray(); }
+  async getLayer(id: string) { const c = await this.collection<Layer>('layers'); return c.findOne({ id }); }
+  async createLayer(insertLayer: InsertLayer) { const c = await this.collection<Layer>('layers'); const id = randomUUID(); const layer = { id, cityId: insertLayer.cityId, name: insertLayer.name, type: insertLayer.type, geoJSON: insertLayer.geoJSON }; await c.insertOne(layer); return layer; }
+
+  async getBuildings(cityId: string) { const c = await this.collection<Building>('buildings'); return c.find({ cityId }).toArray(); }
+  async getBuilding(id: string) { const c = await this.collection<Building>('buildings'); return c.findOne({ id }); }
+
+  async getSensors(cityId: string) { const c = await this.collection<Sensor>('sensors'); return c.find({ cityId }).toArray(); }
+  async getSensor(id: string) { const c = await this.collection<Sensor>('sensors'); return c.findOne({ id }); }
+  async addSensorReading(sensorId: string, reading: { timestamp: string; value: number; unit: string }) {
+    const c = await this.collection<Sensor>('sensors');
+    const sensor = await c.findOne({ id: sensorId });
+    if (!sensor) throw new Error(`Sensor ${sensorId} not found`);
+    sensor.readings = sensor.readings || [];
+    sensor.readings.push(reading);
+    await c.updateOne({ id: sensorId }, { $set: { readings: sensor.readings } });
+    return sensor;
+  }
+
+  async saveSimulation(simulation: Omit<SimulationResult, "id">) { const c = await this.collection<SimulationResult>('simulations'); const id = randomUUID(); const result = { ...simulation, id }; await c.insertOne(result); return result; }
+  async getSimulations(cityId: string) { const c = await this.collection<SimulationResult>('simulations'); return c.find({ cityId }).toArray(); }
+
+  async saveProposal(proposal: Omit<RegenerativeProposal, "id">) { const c = await this.collection<RegenerativeProposal>('proposals'); const id = randomUUID(); const result = { ...proposal, id }; await c.insertOne(result); return result; }
+  async getProposals(cityId: string) { const c = await this.collection<RegenerativeProposal>('proposals'); return c.find({ cityId }).toArray(); }
+  async getProposalsByBuilding(buildingId: string) { const c = await this.collection<RegenerativeProposal>('proposals'); return c.find({ buildingId }).toArray(); }
+}
+
+let storageInstance: IStorage;
+if (process.env.MONGODB_URI) {
+  storageInstance = new MongoStorage(process.env.MONGODB_URI);
+} else {
+  const mem = new MemStorage();
+  // seed mem storage with sample data
+  mem.cities = (mem as any).cities;
+  storageInstance = mem;
+}
+
+export const storage = storageInstance;

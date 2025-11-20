@@ -9,8 +9,11 @@ export default function Dashboard() {
   const { data: cities } = useQuery<any[]>({
     queryKey: ["/api/cities"],
   });
+  const { data: selectedCity } = useQuery<{ cityId: string } | null>({
+    queryKey: ["/api/selected-city"],
+  });
 
-  const cityId = cities?.[0]?.id || "bengaluru-1";
+  const cityId = selectedCity?.cityId || cities?.[0]?.id || "bengaluru-1";
 
   const { data: simulations } = useQuery<SimulationResult[]>({
     queryKey: ["/api/cities", cityId, "simulations"],

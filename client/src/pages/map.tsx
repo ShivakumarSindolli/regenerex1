@@ -30,6 +30,20 @@ export default function MapPage() {
     queryKey: ["/api/cities"],
   });
 
+  const { data: selectedCity } = useQuery<{ cityId: string } | null>({
+    queryKey: ["/api/selected-city"],
+  });
+
+  const onSelectCity = async (cityId: string) => {
+    try {
+      await apiRequest("POST", "/api/select-city", { cityId });
+      // navigate to dashboard to view selected city's data
+      window.location.href = "/dashboard";
+    } catch (err) {
+      console.error("Failed to select city", err);
+    }
+  };
+
   const cityId = cities?.[0]?.id || "bengaluru-1";
 
   const { data: layers } = useQuery<LayerType[]>({
@@ -151,6 +165,19 @@ export default function MapPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
+            <div className="mb-2">
+              <label className="text-xs text-muted-foreground">Select City</label>
+              <select
+                className="w-full mt-1 rounded-md border bg-background px-2 py-1"
+                value={selectedCity?.cityId || cities?.[0]?.id}
+                onChange={(e) => onSelectCity(e.target.value)}
+                data-testid="select-city"
+              >
+                {cities?.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
